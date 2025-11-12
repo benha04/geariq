@@ -129,3 +129,32 @@ There is a CI workflow under `.github/workflows/ci.yml` that runs backend lintin
 ---
 
 If anything in this README should be restored from your manual edits, tell me which section and I'll preserve it exactly. I will now commit this README cleanup unless you want further changes.
+
+## Demo / Animated snippet
+
+We include a small helper script to demo the app in a terminal (suitable for recording with asciinema).
+
+To record a short demo and embed it in the README later:
+
+1. Install asciinema (https://asciinema.org/docs/installation).
+
+2. Record using the helper script:
+
+```bash
+# from repo root
+asciinema rec demo.cast ./scripts/record_demo.sh
+```
+
+3. Upload the cast to asciinema.org and copy the embed code they give you.
+
+For now we include a placeholder for the demo. Replace the HTML/embed below with the embed you get from asciinema:
+
+```html
+<!-- Asciinema embed placeholder -->
+<iframe
+  src="https://asciinema.org/a/REPLACE_ME/embed"
+  style="width: 100%; height: 300px; border: 0"
+></iframe>
+```
+
+If you prefer I can record an example locally and upload it (requires permission to publish the cast). Alternatively I can produce a GIF and add it to the README.

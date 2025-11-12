@@ -128,7 +128,6 @@ There is a CI workflow under `.github/workflows/ci.yml` that runs backend lintin
 
 ---
 
-If anything in this README should be restored from your manual edits, tell me which section and I'll preserve it exactly. I will now commit this README cleanup unless you want further changes.
 
 ## Demo / Animated snippet
 
@@ -157,4 +156,3 @@ For now we include a placeholder for the demo. Replace the HTML/embed below with
 ></iframe>
 ```
 
-If you prefer I can record an example locally and upload it (requires permission to publish the cast). Alternatively I can produce a GIF and add it to the README.

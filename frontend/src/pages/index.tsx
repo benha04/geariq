@@ -4,54 +4,71 @@ import SearchBar from '@/components/SearchBar'
 export default function Home() {
   const [result, setResult] = useState<any | null>(null)
   return (
-    <main className="min-h-screen bg-white text-gray-900">
+    <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 text-gray-900">
       <header className="max-w-6xl mx-auto p-8 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-pink-500 rounded-md flex items-center justify-center text-white font-bold">GQ</div>
-          <h1 className="text-2xl font-semibold">GearIQ</h1>
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-pink-500 rounded-lg flex items-center justify-center text-white font-extrabold">GQ</div>
+          <div>
+            <h1 className="text-2xl font-semibold">GearIQ</h1>
+            <div className="text-xs text-gray-500">WIP — product demo & investor preview</div>
+          </div>
         </div>
-        <nav className="flex items-center gap-4 text-sm text-gray-600">
+        <nav className="flex items-center gap-6 text-sm text-gray-600">
           <a href="#features" className="hover:underline">Features</a>
-          <a href="#install" className="hover:underline">Get Started</a>
+          <a href="#vision" className="hover:underline">Vision</a>
           <a href="#demo" className="hover:underline">Try Demo</a>
         </nav>
       </header>
 
-      <section className="bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-6xl mx-auto py-20 px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-4xl font-extrabold leading-tight">Find the best gear, instantly.</h2>
-            <p className="mt-4 text-lg text-gray-600">Describe what you need in plain language — we search across retailers, surface the best value product right now, and explain why.</p>
+            <div className="inline-flex items-center gap-3 mb-4">
+              <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs font-semibold">Work in progress</span>
+              <span className="text-xs text-gray-500">Proof of concept for partners & integrators</span>
+            </div>
 
-            <div className="mt-8 flex gap-4">
-              <a href="#demo" className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700">Try Demo</a>
-              <a href="#install" className="inline-flex items-center px-6 py-3 border rounded-md text-gray-700 hover:bg-gray-100">Get Started</a>
+            <h2 className="text-5xl font-extrabold leading-tight">Find the best gear, not just the cheapest.</h2>
+            <p className="mt-6 text-lg text-gray-700">Describe what you need in plain language — we search across retailers, rank offers by value, and explain exactly why the top result is the best choice. Built for power shoppers, publishers, and partners who want transparent cross-retailer discovery.</p>
+
+            <div className="mt-8 flex gap-4 items-center">
+              <a href="#demo" className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700">Try the demo</a>
+              <a href="#vision" className="inline-flex items-center px-6 py-3 border rounded-md text-gray-700 hover:bg-gray-100">See our vision</a>
               <TrackButton />
             </div>
 
-            <div className="mt-8 text-sm text-gray-500">
-              <strong>Examples:</strong> "best MIPS bike helmet under $150 with 2-day delivery", "50mm lens under $400".
+            <div className="mt-6 text-sm text-gray-500">
+              <strong>Quick examples:</strong> "best MIPS bike helmet under $150 with 2-day delivery", "studio headphones under $250 with free shipping".
             </div>
           </div>
 
-          <div className="bg-white border rounded-2xl p-6 shadow-sm">
-            <h4 className="text-sm text-gray-500">Live demo</h4>
-            <div id="demo" className="mt-4">
+          <div className="bg-white border rounded-3xl p-8 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-gray-500">Live demo (read-only)</div>
+                <div className="text-xs text-gray-400">No backend required for this demo — results come from our development catalog.</div>
+              </div>
+              <div className="text-sm text-gray-400">v0.1</div>
+            </div>
+
+            <div id="demo" className="mt-6">
               <SearchBar onResult={setResult} />
               {result && (
-                <div className="mt-4">
+                <div className="mt-6">
                   {result.best && (
-                    <div className="border rounded-lg p-4 mb-4">
+                    <div className="border rounded-lg p-4 mb-4 bg-gray-50">
                       <div className="text-sm text-gray-500">Best Match</div>
-                      <a className="text-lg font-medium text-indigo-600" href={result.best.url} target="_blank" rel="noreferrer">{result.best.title}</a>
+                      <a className="text-lg font-semibold text-indigo-600" href={result.best.url} target="_blank" rel="noreferrer">{result.best.title}</a>
                       <div className="text-sm text-gray-600">{result.best.retailer} • ${result.best.price} • ⭐ {result.best.rating}</div>
+                      <div className="mt-2 text-xs text-gray-500">Reason: {result.rationale?.why || 'Matches features & price'}</div>
                     </div>
                   )}
+
                   <div className="border rounded-lg p-3">
                     <div className="text-sm text-gray-500 mb-2">Alternatives</div>
                     <ul className="list-disc ml-5 text-sm text-gray-700">
                       {result.candidates.map((c:any, i:number) => (
-                        <li key={i}><a className="text-indigo-600 underline" href={c.url} target="_blank" rel="noreferrer">{c.title}</a> — {c.retailer} • ${c.price}</li>
+                        <li key={i} className="mb-1"><a className="text-indigo-600 underline" href={c.url} target="_blank" rel="noreferrer">{c.title}</a> — {c.retailer} • ${c.price}</li>
                       ))}
                     </ul>
                   </div>
@@ -62,43 +79,53 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="max-w-6xl mx-auto py-16 px-6">
-        <h3 className="text-2xl font-semibold">Features</h3>
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 border rounded-lg">
-            <h4 className="font-medium">Natural language search</h4>
-            <p className="mt-2 text-sm text-gray-600">Describe your needs and constraints — we parse budget, shipping, attributes, and brand preferences.</p>
+      <section id="vision" className="max-w-6xl mx-auto px-6 py-16">
+        <div className="bg-gradient-to-r from-indigo-50 to-pink-50 p-8 rounded-2xl border">
+          <h3 className="text-2xl font-semibold">Our product vision</h3>
+          <p className="mt-4 text-gray-700">GearIQ helps users and partners discover the single best product for their needs across retailers, not just the cheapest listing. We combine:</p>
+
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-4">
+              <h4 className="font-medium">1. Natural language understanding</h4>
+              <p className="text-sm text-gray-600 mt-2">Parse budgets, delivery constraints, brands, and product attributes from free text.</p>
+            </div>
+            <div className="p-4">
+              <h4 className="font-medium">2. Cross-retailer signals</h4>
+              <p className="text-sm text-gray-600 mt-2">Aggregate offers, ratings, and shipping estimates to compute a transparent value score.</p>
+            </div>
+            <div className="p-4">
+              <h4 className="font-medium">3. Explainable ranking</h4>
+              <p className="text-sm text-gray-600 mt-2">Return human-readable rationale for why a result is best—price, matched features, ETA, and quality.</p>
+            </div>
           </div>
-          <div className="p-6 border rounded-lg">
-            <h4 className="font-medium">Transparent ranking</h4>
-            <p className="mt-2 text-sm text-gray-600">We show why a product ranked #1: price, features matched, delivery ETA, and rating.</p>
-          </div>
-          <div className="p-6 border rounded-lg">
-            <h4 className="font-medium">Cross-retailer aggregation</h4>
-            <p className="mt-2 text-sm text-gray-600">We aggregate offers from multiple affiliate networks to surface the best value in one place.</p>
-          </div>
+
+          <div className="mt-6 text-sm text-gray-700">For partners (publishers, affiliate networks, marketplaces) we provide a small, well-documented API that returns ranked candidates and granular scoring rationale so you can build trust with users and increase conversion.</div>
         </div>
       </section>
 
-      <section id="install" className="bg-white border-t py-12">
-        <div className="max-w-6xl mx-auto px-6">
-          <h4 className="text-xl font-semibold">Get started</h4>
-          <p className="mt-3 text-gray-600">Install locally or use our API to integrate GearIQ into your site.</p>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-6 border rounded-lg bg-gray-50">
-              <h5 className="font-medium">Install CLI</h5>
-              <pre className="mt-3 bg-white p-3 rounded text-sm">pip install geariq-cli</pre>
-            </div>
-            <div className="p-6 border rounded-lg bg-gray-50">
-              <h5 className="font-medium">API</h5>
-              <pre className="mt-3 bg-white p-3 rounded text-sm">GET /v1/search?q=best+helmet+under+150</pre>
-            </div>
+      <section id="features" className="max-w-6xl mx-auto py-12 px-6">
+        <h3 className="text-2xl font-semibold">Why this matters</h3>
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-6 border rounded-lg bg-white">
+            <h4 className="font-medium">Better decisions</h4>
+            <p className="mt-2 text-sm text-gray-600">Users get recommendations that balance price, features and delivery, not just the lowest SKU price.</p>
+          </div>
+          <div className="p-6 border rounded-lg bg-white">
+            <h4 className="font-medium">Higher intent</h4>
+            <p className="mt-2 text-sm text-gray-600">Explainable results increase user confidence and conversion for partners.</p>
+          </div>
+          <div className="p-6 border rounded-lg bg-white">
+            <h4 className="font-medium">Easy integration</h4>
+            <p className="mt-2 text-sm text-gray-600">A single API returns ranked candidates plus the score breakdown you can display to users.</p>
           </div>
         </div>
       </section>
 
       <footer className="max-w-6xl mx-auto p-8 text-sm text-gray-500">
-        © {new Date().getFullYear()} GearIQ — Open source
+        <div className="flex items-center justify-between">
+          <div>© {new Date().getFullYear()} GearIQ — Work-in-progress</div>
+          <div className="text-xs text-gray-400">Contact: hello@geariq.example</div>
+        </div>
       </footer>
     </main>
   )

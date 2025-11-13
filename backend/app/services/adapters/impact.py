@@ -1,31 +1,75 @@
 from typing import List, Dict, Any
 import os
 import asyncio
+import httpx
 
 from app.core.config import settings
+from app.services.catalog import search_catalog
 
 
 async def _call_impact_api(query: str, budget: float | None = None) -> List[Dict[str, Any]]:
-    """Placeholder: real HTTP call to Impact API would go here using httpx.
+    """Attempt a real HTTP call to the configured Impact API base.
 
-    For now, return an empty list to indicate no remote data.
+    This function expects environment variables to be set:
+    - IMPACT_API_BASE (optional, default is a reasonable placeholder)
+    - IMPACT_API_KEY (required)
+    - IMPACT_PARTNER_SID (optional)
+
+    If the call fails for any reason, return an empty list to fall back to stubs.
     """
-    await asyncio.sleep(0)  # keep function async
-    return []
+    api_base = os.getenv("IMPACT_API_BASE") or "https://api.impact.com"
+    api_key = os.getenv("IMPACT_API_KEY")
+    if not api_key:
+        return []
 
+    url = f"{api_base}/v1/search"
+    params = {"q": query}
+    if budget is not None:
+        params["budget"] = budget
 
-def _stubbed_results() -> List[Dict[str, Any]]:
-    return [
-        {"title": "Acme MIPS Helmet (Impact)", "retailer": "ImpactMall", "price": 129.99, "rating": 4.6, "shipping_days": 2, "url": "https://impact.example/irei"},
-        {"title": "RoadPro MIPS Helmet (Impact)", "retailer": "ImpactStore", "price": 119.0, "rating": 4.4, "shipping_days": 2, "url": "https://impact.example/amazon"},
-    ]
+    headers = {"Authorization": f"Bearer {api_key}", "Accept": "application/json"}
+    partner_sid = os.getenv("IMPACT_PARTNER_SID")
+    if partner_sid:
+        headers["X-Impact-Partner-Sid"] = partner_sid
+
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            resp = await client.get(url, params=params, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            # Expect data to be a list of results or { items: [...] }
+            items = data if isinstance(data, list) else data.get("items") or []
+            mapped: List[Dict[str, Any]] = []
+            for it in items:
+                mapped.append({
+                    "title": it.get("title"),
+                    "retailer": it.get("merchant") or it.get("retailer"),
+                    "price": it.get("price"),
+                    "rating": it.get("rating"),
+                    "shipping_days": it.get("shipping_days"),
+                    "url": it.get("url") or it.get("affiliate_url"),
+                    "matched_attributes": it.get("matched_attributes", []),
+                })
+            return mapped
+    except Exception:
+        # In production we'd log the exception; fall back to catalog for dev
+        return []
 
 
 async def search(query: str, budget: float | None = None) -> List[Dict[str, Any]]:
-    # If an API key is configured, a real call would be made; otherwise return stubs.
-    key = os.getenv("IMPACT_API_KEY") or settings.openai_api_key  # reuse env if present
-    if not key:
-        return _stubbed_results()
+    # Prefer real API if key is configured; otherwise use catalog fallback for dev.
+    key = os.getenv("IMPACT_API_KEY") or settings.openai_api_key
+    if key:
+        results = await _call_impact_api(query, budget)
+        if results:
+            return results
 
-    # TODO: implement real API call with httpx and map fields to normalized shape.
-    return await _call_impact_api(query, budget)
+    # Catalog fallback
+    # search_catalog returns a list of dicts in the same general shape used by adapters
+    return search_catalog(query, top_n=10)
+
+
+async def search_parsed(parsed_query) -> List[Dict[str, Any]]:
+    q = getattr(parsed_query, "q", "")
+    budget = getattr(getattr(parsed_query, "constraints", None), "budget", None)
+    return await search(q, budget)

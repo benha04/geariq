@@ -58,6 +58,8 @@ See the repo for full file tree and detailed module locations.
 
 There are two common ways to run locally: with Docker Compose or running services directly.
 
+Note: During early development we include small "stub" products in the marketplace adapters (Impact, CJ, Rakuten) for categories like snowboards and helmets so natural-language queries such as "snowboarding" return representative items without live API keys. Remove or replace these stubs when wiring real retailer APIs.
+
 ### Option A — Docker Compose (recommended for a full stack)
 
 ```bash
@@ -66,6 +68,22 @@ docker compose up --build
 
 # frontend: http://localhost:3000
 # backend:  http://localhost:8000
+```
+
+Quick start summary (macOS / zsh)
+
+```bash
+# start database + cache
+docker-compose up -d db cache
+
+# run helper that runs migrations and starts services (repo root)
+./scripts/dev_up.sh
+
+# run backend tests
+cd backend && pytest -q
+
+# commit & push
+git add -A && git commit -m "chore: update docs/dev" && git push origin main
 ```
 
 ### Option B — Run services locally (macOS / manual)

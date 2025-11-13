@@ -8,7 +8,12 @@ import os
 config = context.config
 config.set_main_option("sqlalchemy.url", os.getenv("VECTOR_DB_URL", ""))
 if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+    try:
+        fileConfig(config.config_file_name)
+    except Exception:
+        # Ignore logging configuration errors when alembic.ini lacks [loggers]/[formatters]
+        # This allows alembic to run in development environments where logging isn't set up.
+        pass
 
 target_metadata = Base.metadata
 

@@ -13,7 +13,6 @@ echo
 
 echo "=== /v1/search?q=MIPS bike helmet&budget=150 ==="
 curl -sS "http://127.0.0.1:8000/v1/search?q=MIPS%20bike%20helmet&budget=150" | python -m json.tool || true
-
 echo
 echo "Demo complete. To record this session, run:"
 echo "  asciinema rec demo.cast ./scripts/record_demo.sh"

@@ -19,8 +19,9 @@ async def search(query: str, budget: float | None = None) -> List[Dict[str, Any]
         if items:
             return items
 
-    # development fallback
-    return search_catalog(query, top_n=10)
+    # return empty when CJ is not configured; central search_service will
+    # decide whether to fall back to the sample catalog
+    return []
 
 
 async def search_parsed(parsed_query) -> List[Dict[str, Any]]:

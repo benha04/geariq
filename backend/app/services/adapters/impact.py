@@ -64,9 +64,10 @@ async def search(query: str, budget: float | None = None) -> List[Dict[str, Any]
         if results:
             return results
 
-    # Catalog fallback
-    # search_catalog returns a list of dicts in the same general shape used by adapters
-    return search_catalog(query, top_n=10)
+    # If Impact is not configured or returned no items, return empty so the
+    # central search service can decide whether to fall back to the sample
+    # catalog.
+    return []
 
 
 async def search_parsed(parsed_query) -> List[Dict[str, Any]]:

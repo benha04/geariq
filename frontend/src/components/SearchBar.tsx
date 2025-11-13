@@ -10,8 +10,16 @@ export default function SearchBar({ onResult }: Props) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    const { data } = await api.get('/v1/search', { params: { q, budget } })
-    onResult(data)
+    try {
+      const { data } = await api.get('/v1/search', { params: { q, budget } })
+      onResult(data)
+    } catch (err: any) {
+      console.error('Search error', err)
+      // Prefer detailed info when available (axios error shape)
+      const serverDetail = err?.response?.data ? JSON.stringify(err.response.data) : ''
+      const message = `Search failed: ${err?.message || 'unknown error'} ${serverDetail}`
+      onResult({ error: message })
+    }
     setLoading(false)
   }
 

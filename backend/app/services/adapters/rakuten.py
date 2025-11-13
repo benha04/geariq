@@ -16,8 +16,8 @@ async def search(query: str, budget: float | None = None) -> List[Dict[str, Any]
         items = await _call_rakuten_api(query, budget)
         if items:
             return items
-
-    return search_catalog(query, top_n=10)
+    # return empty when not configured; central search_service will handle fallback
+    return []
 
 
 async def search_parsed(parsed_query) -> List[Dict[str, Any]]:

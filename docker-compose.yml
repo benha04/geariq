@@ -19,6 +19,8 @@ services:
       - VECTOR_DB_URL=${VECTOR_DB_URL}
       - REDIS_URL=${REDIS_URL}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SERPAPI_KEY=${SERPAPI_KEY}
+      - SERPAPI_BASE=${SERPAPI_BASE}
       - ENV=${ENV}
     volumes:
       - ./backend:/app

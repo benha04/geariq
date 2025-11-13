@@ -35,6 +35,7 @@ class Candidate(BaseModel):
     rating: Optional[float]
     shipping_days: Optional[int]
     retailer: Optional[str]
+    image: Optional[str] = None
     matched_attributes: List[str] = Field(default_factory=list)
     score_breakdown: Optional[ScoreBreakdown] = None
 

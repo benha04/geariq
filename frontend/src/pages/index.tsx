@@ -2,7 +2,6 @@ import { useState } from 'react'
 import SearchBar from '@/components/SearchBar'
 
 export default function Home() {
-  const [result, setResult] = useState<any | null>(null)
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 text-gray-900">
       <header className="max-w-6xl mx-auto p-8 flex items-center justify-between">
@@ -52,46 +51,8 @@ export default function Home() {
             </div>
 
             <div id="demo" className="mt-6">
-              <SearchBar onResult={setResult} />
-              {result && (
-                <div className="mt-6">
-                  {result.error && (
-                    <div className="mb-4 p-3 rounded bg-red-50 border text-sm text-red-700">{result.error}</div>
-                  )}
-                  {result.best && (
-                    <div className="border rounded-lg p-4 mb-4 bg-gray-50 flex gap-4 items-start">
-                      {result.best.image && (
-                        <img src={result.best.image} className="w-28 h-28 object-cover rounded-md" alt="best" />
-                      )}
-                      <div>
-                        <div className="text-sm text-gray-500">Best Match</div>
-                        <a className="text-lg font-semibold text-indigo-600" href={result.best.url} target="_blank" rel="noreferrer">{result.best.title}</a>
-                        <div className="text-sm text-gray-600">{result.best.retailer} • ${result.best.price} • ⭐ {result.best.rating}</div>
-                        <div className="mt-2 text-xs text-gray-500">Reason: {result.rationale?.why || 'Matches features & price'}</div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="border rounded-lg p-3">
-                    <div className="text-sm text-gray-500 mb-2">Alternatives</div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {(result.candidates || []).map((c:any, i:number) => (
-                        <div key={i} className="flex gap-3 items-center p-2 border rounded">
-                          {c.image ? (
-                            <img src={c.image} className="w-16 h-16 object-cover rounded" alt={c.title} />
-                          ) : (
-                            <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400">No image</div>
-                          )}
-                          <div className="text-sm">
-                            <a className="text-indigo-600 font-medium" href={c.url} target="_blank" rel="noreferrer">{c.title}</a>
-                            <div className="text-xs text-gray-600">{c.retailer} • ${c.price}</div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
+              <SearchBar />
+              <div className="mt-6 text-sm text-gray-500">Searching will navigate to a dedicated results page with match-rating and product cards.</div>
             </div>
           </div>
         </div>

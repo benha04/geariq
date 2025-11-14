@@ -1,24 +1,34 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import { api } from '@/lib/api'
 
-type Props = { onResult: (data: any) => void }
+type Props = { onResult?: (data: any) => void }
 export default function SearchBar({ onResult }: Props) {
   const [q, setQ] = useState('MIPS bike helmet')
   const [budget, setBudget] = useState('150')
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    try {
-      const { data } = await api.get('/v1/search', { params: { q, budget } })
-      onResult(data)
-    } catch (err: any) {
-      console.error('Search error', err)
-      // Prefer detailed info when available (axios error shape)
-      const serverDetail = err?.response?.data ? JSON.stringify(err.response.data) : ''
-      const message = `Search failed: ${err?.message || 'unknown error'} ${serverDetail}`
-      onResult({ error: message })
+    // If parent provided onResult (index demo), call the API and return data
+    if (onResult) {
+      try {
+        const { data } = await api.get('/v1/search', { params: { q, budget } })
+        onResult(data)
+      } catch (err: any) {
+        console.error('Search error', err)
+        const serverDetail = err?.response?.data ? JSON.stringify(err.response.data) : ''
+        const message = `Search failed: ${err?.message || 'unknown error'} ${serverDetail}`
+        onResult({ error: message })
+      }
+    } else {
+      // Otherwise navigate to the results page with query params
+      const params = new URLSearchParams()
+      if (q) params.set('q', q)
+      if (budget) params.set('budget', budget)
+      await router.push(`/results?${params.toString()}`)
     }
     setLoading(false)
   }
